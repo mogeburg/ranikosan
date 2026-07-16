@@ -118,6 +118,10 @@ button {
   background: #ffffff;
 }
 
+.fanart-image-link {
+  display: block;
+}
+
 .fanart-image {
   display: block;
   width: 100%;

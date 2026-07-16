@@ -67,11 +67,19 @@ export const OtegakiPage = () => {
         {filteredFanarts.map((fanart) => {
           return (
             <article key={fanart.imagePath} className="fanart-card">
-              <img
-                className="fanart-image"
-                src={fanart.imagePath}
-                alt={fanart.author ?? "もげ"}
-              />
+              <a
+                className="fanart-image-link"
+                href={fanart.imagePath}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="元画像を開く"
+              >
+                <img
+                  className="fanart-image"
+                  src={fanart.imagePath}
+                  alt={fanart.author ?? "もげ"}
+                />
+              </a>
               <div className="fanart-body">
                 <p className="fanart-meta">
                   <time dateTime={fanart.postedAt}>{formatDate(fanart.postedAt)}</time>
