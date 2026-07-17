@@ -64,6 +64,56 @@ button {
   letter-spacing: 0.02em;
 }
 
+.sensitive-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #d0d0d0;
+  background: #ffffff;
+  color: #333333;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.sensitive-toggle:hover {
+  border-color: #888888;
+}
+
+.sensitive-toggle::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 1px solid #b0b0b0;
+  border-radius: 4px;
+  background: #ffffff;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+  flex: none;
+}
+
+.sensitive-toggle.is-checked {
+  background: #111111;
+  border-color: #111111;
+  color: #ffffff;
+}
+
+.sensitive-toggle.is-checked::before {
+  border-color: #ffffff;
+  background-color: #111111;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3.5 8.5l3 3 6-7'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+
 .home-link {
   display: inline-block;
   text-decoration: none;
@@ -79,8 +129,17 @@ button {
   gap: 10px;
 }
 
-.tag-filter {
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 16px;
+}
+
+.filter-divider {
+  color: #cccccc;
+  user-select: none;
 }
 
 .tag {
@@ -122,12 +181,60 @@ button {
   display: block;
 }
 
+.fanart-image-link.is-locked {
+  pointer-events: none;
+  cursor: default;
+}
+
 .fanart-image {
   display: block;
   width: 100%;
   height: auto;
   object-fit: contain;
   background: #ffffff;
+}
+
+.fanart-image-wrap {
+  display: block;
+  overflow: hidden;
+}
+
+.fanart-image.is-blurred {
+  filter: blur(16px);
+}
+
+.fanart-image-link {
+  position: relative;
+}
+
+.sensitive-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.55);
+  pointer-events: auto;
+}
+
+.sensitive-label {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #333333;
+}
+
+.sensitive-reveal-button {
+  border: 1px solid #111111;
+  background: #111111;
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 0.8rem;
 }
 
 .fanart-body {

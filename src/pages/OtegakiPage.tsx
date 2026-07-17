@@ -1,5 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fanarts } from "../data/fanarts";
+
+const SENSITIVE_UNLOCKED_KEY = "otegaki:sensitiveUnlocked";
 
 const isYoutubeUrl = (url: string) => {
   try {
@@ -18,6 +20,24 @@ const sortedFanarts = [...fanarts].sort((a, b) =>
 
 export const OtegakiPage = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [sensitiveUnlocked, setSensitiveUnlocked] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(SENSITIVE_UNLOCKED_KEY) === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        SENSITIVE_UNLOCKED_KEY,
+        sensitiveUnlocked ? "true" : "false",
+      );
+    } catch {
+      // localStorage が利用できない環境では無視する
+    }
+  }, [sensitiveUnlocked]);
 
   const tags = useMemo(
     () =>
@@ -41,48 +61,105 @@ export const OtegakiPage = () => {
         <h1>おてがき</h1>
       </header>
 
-      {tags.length > 0 ? (
-        <div className="tag-filter" aria-label="タグで絞り込み">
+      <div className="filter-bar" aria-label="フィルター">
+        {sortedFanarts.some((fanart) => fanart.sensitive) ? (
           <button
             type="button"
-            className={!selectedTag ? "tag is-active" : "tag"}
-            onClick={() => setSelectedTag(null)}
+            className={
+              sensitiveUnlocked
+                ? "sensitive-toggle is-checked"
+                : "sensitive-toggle"
+            }
+            aria-pressed={sensitiveUnlocked}
+            onClick={() => setSensitiveUnlocked((prev) => !prev)}
           >
-            すべて
+            センシティブな画像を表示
           </button>
-          {tags.map((tag) => (
+        ) : null}
+        {sortedFanarts.some((fanart) => fanart.sensitive) && tags.length > 0 ? (
+          <span className="filter-divider" aria-hidden="true">
+            ｜
+          </span>
+        ) : null}
+        {tags.length > 0 ? (
+          <div className="tag-filter" aria-label="タグで絞り込み">
             <button
-              key={tag}
               type="button"
-              className={selectedTag === tag ? "tag is-active" : "tag"}
-              onClick={() => setSelectedTag(tag)}
+              className={!selectedTag ? "tag is-active" : "tag"}
+              onClick={() => setSelectedTag(null)}
             >
-              {tag}
+              すべて
             </button>
-          ))}
-        </div>
-      ) : null}
+            {tags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className={selectedTag === tag ? "tag is-active" : "tag"}
+                onClick={() => setSelectedTag(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
 
       <section className="gallery-grid">
         {filteredFanarts.map((fanart) => {
+          const isSensitive = fanart.sensitive === true;
+          const revealed = isSensitive && sensitiveUnlocked;
           return (
             <article key={fanart.imagePath} className="fanart-card">
               <a
-                className="fanart-image-link"
+                className={
+                  isSensitive && !revealed
+                    ? "fanart-image-link is-locked"
+                    : "fanart-image-link"
+                }
                 href={fanart.imagePath}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="元画像を開く"
+                onClick={
+                  isSensitive && !revealed
+                    ? (e) => e.preventDefault()
+                    : undefined
+                }
               >
-                <img
-                  className="fanart-image"
-                  src={fanart.imagePath}
-                  alt={fanart.author ?? "もげ"}
-                />
+                <span className="fanart-image-wrap">
+                  <img
+                    className={
+                      isSensitive && !revealed
+                        ? "fanart-image is-blurred"
+                        : "fanart-image"
+                    }
+                    src={fanart.imagePath}
+                    alt={fanart.author ?? "もげ"}
+                  />
+                </span>
+                {isSensitive && !revealed ? (
+                  <div
+                    className="sensitive-overlay"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <p className="sensitive-label">
+                      センシティブな内容が含まれています
+                    </p>
+                    <button
+                      type="button"
+                      className="sensitive-reveal-button"
+                      onClick={() => setSensitiveUnlocked(true)}
+                    >
+                      表示する
+                    </button>
+                  </div>
+                ) : null}
               </a>
               <div className="fanart-body">
                 <p className="fanart-meta">
-                  <time dateTime={fanart.postedAt}>{formatDate(fanart.postedAt)}</time>
+                  <time dateTime={fanart.postedAt}>
+                    {formatDate(fanart.postedAt)}
+                  </time>
                   <span>{fanart.author ?? "もげ"}</span>
                   {fanart.relatedUrl ? (
                     <a

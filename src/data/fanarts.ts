@@ -4,10 +4,27 @@ export type Fanart = {
   author?: string;
   relatedUrl?: string;
   tags: string[];
+  sensitive?: boolean;
 };
 
-// TODO: author / relatedUrl / tags は実データに置き換えてください。
+// MEMO: 新しい物ほど上に追加していくこと
+// MEMO: 成人向けなどのセンシティブな画像には sensitive: true を付けること。
+//       付けた画像はグリッドでブラー表示され、解除ボタン押下で表示される。
 export const fanarts: Fanart[] = [
+  {
+    imagePath: "../otegaki/20260717_HNb1eRCbQAAB8UY.png",
+    postedAt: "2026-07-17",
+    author: "アマクサモドキ",
+    relatedUrl: "https://x.com/ylotlalSsulc7lI/status/2078118188685136368",
+    tags: ["X"],
+    sensitive: true,
+  },
+  {
+    imagePath: "../otegaki/20260717_1784293104.9184f4bb1f21.webp",
+    postedAt: "2026-07-17",
+    tags: ["絵"],
+    sensitive: true,
+  },
   {
     imagePath: "../otegaki/20260713_1783927048.54434b688621.webp",
     postedAt: "2026-07-13",
