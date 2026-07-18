@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fanarts } from "../data/fanarts";
+import { fanarts, fanartImageUrl } from "../data/fanarts";
 
 const SENSITIVE_UNLOCKED_KEY = "otegaki:sensitiveUnlocked";
 
@@ -13,6 +13,100 @@ const isYoutubeUrl = (url: string) => {
 };
 
 const formatDate = (date: string) => date.slice(2).replaceAll("-", ".");
+
+type FanartCardProps = {
+  fanart: (typeof fanarts)[number];
+  revealed: boolean;
+  selectedTag: string | null;
+  onReveal: () => void;
+  onSelectTag: (tag: string) => void;
+};
+
+const FanartCard = ({
+  fanart,
+  revealed,
+  selectedTag,
+  onReveal,
+  onSelectTag,
+}: FanartCardProps) => {
+  const [broken, setBroken] = useState(false);
+  const imageUrl = fanartImageUrl(fanart.imagePath);
+  const locked = fanart.sensitive === true && !revealed;
+
+  return (
+    <article key={fanart.imagePath} className="fanart-card">
+      <a
+        className={locked ? "fanart-image-link is-locked" : "fanart-image-link"}
+        href={imageUrl}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="元画像を開く"
+        onClick={locked ? (e) => e.preventDefault() : undefined}
+      >
+        <span className="fanart-image-wrap">
+          {broken ? (
+            <div className="fanart-image-broken">画像を読み込めませんでした</div>
+          ) : (
+            <img
+              className={locked ? "fanart-image is-blurred" : "fanart-image"}
+              src={imageUrl}
+              alt={fanart.author ?? "もげ"}
+              loading="lazy"
+              onError={() => setBroken(true)}
+            />
+          )}
+        </span>
+        {locked ? (
+          <div
+            className="sensitive-overlay"
+            onClick={(e) => e.preventDefault()}
+          >
+            <p className="sensitive-label">
+              センシティブな内容が含まれています
+            </p>
+            <button
+              type="button"
+              className="sensitive-reveal-button"
+              onClick={onReveal}
+            >
+              表示する
+            </button>
+          </div>
+        ) : null}
+      </a>
+      <div className="fanart-body">
+        <p className="fanart-meta">
+          <time dateTime={fanart.postedAt}>{formatDate(fanart.postedAt)}</time>
+          <span>{fanart.author ?? "もげ"}</span>
+          {fanart.relatedUrl ? (
+            <a
+              className="meta-link-button meta-link-button-right"
+              href={fanart.relatedUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {isYoutubeUrl(fanart.relatedUrl) ? "配信URL" : "元URL"}
+            </a>
+          ) : null}
+        </p>
+        {fanart.tags.length > 0 ? (
+          <div className="fanart-tags">
+            {fanart.tags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className={selectedTag === tag ? "tag is-active" : "tag"}
+                onClick={() => onSelectTag(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </article>
+  );
+};
 
 const sortedFanarts = [...fanarts].sort((a, b) =>
   b.postedAt.localeCompare(a.postedAt),
@@ -109,87 +203,14 @@ export const OtegakiPage = () => {
           const isSensitive = fanart.sensitive === true;
           const revealed = isSensitive && sensitiveUnlocked;
           return (
-            <article key={fanart.imagePath} className="fanart-card">
-              <a
-                className={
-                  isSensitive && !revealed
-                    ? "fanart-image-link is-locked"
-                    : "fanart-image-link"
-                }
-                href={fanart.imagePath}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="元画像を開く"
-                onClick={
-                  isSensitive && !revealed
-                    ? (e) => e.preventDefault()
-                    : undefined
-                }
-              >
-                <span className="fanart-image-wrap">
-                  <img
-                    className={
-                      isSensitive && !revealed
-                        ? "fanart-image is-blurred"
-                        : "fanart-image"
-                    }
-                    src={fanart.imagePath}
-                    alt={fanart.author ?? "もげ"}
-                  />
-                </span>
-                {isSensitive && !revealed ? (
-                  <div
-                    className="sensitive-overlay"
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <p className="sensitive-label">
-                      センシティブな内容が含まれています
-                    </p>
-                    <button
-                      type="button"
-                      className="sensitive-reveal-button"
-                      onClick={() => setSensitiveUnlocked(true)}
-                    >
-                      表示する
-                    </button>
-                  </div>
-                ) : null}
-              </a>
-              <div className="fanart-body">
-                <p className="fanart-meta">
-                  <time dateTime={fanart.postedAt}>
-                    {formatDate(fanart.postedAt)}
-                  </time>
-                  <span>{fanart.author ?? "もげ"}</span>
-                  {fanart.relatedUrl ? (
-                    <a
-                      className="meta-link-button meta-link-button-right"
-                      href={fanart.relatedUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {isYoutubeUrl(fanart.relatedUrl) ? "配信URL" : "元URL"}
-                    </a>
-                  ) : null}
-                </p>
-                {fanart.tags.length > 0 ? (
-                  <div className="fanart-tags">
-                    {fanart.tags.map((tag) => (
-                      <button
-                        key={tag}
-                        type="button"
-                        className={
-                          selectedTag === tag ? "tag is-active" : "tag"
-                        }
-                        onClick={() => setSelectedTag(tag)}
-                      >
-                        {tag}
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </article>
+            <FanartCard
+              key={fanart.imagePath}
+              fanart={fanart}
+              revealed={revealed}
+              selectedTag={selectedTag}
+              onReveal={() => setSensitiveUnlocked(true)}
+              onSelectTag={setSelectedTag}
+            />
           );
         })}
       </section>

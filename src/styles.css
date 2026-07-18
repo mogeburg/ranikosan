@@ -199,6 +199,18 @@ button {
   overflow: hidden;
 }
 
+.fanart-image-broken {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 12px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #999999;
+  background: #f4f4f4;
+}
+
 .fanart-image.is-blurred {
   filter: blur(16px);
 }
