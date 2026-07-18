@@ -75,4 +75,4 @@ export const fanarts: Fanart[] = [
 ];
 
 export const fanartImageUrl = (imagePath: string): string =>
-  `${import.meta.env.BASE_URL}otegaki/${imagePath}`;
+  `${import.meta.env.BASE_URL}/${imagePath}`;
