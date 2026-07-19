@@ -14,7 +14,10 @@
   --space-md: 1.5rem;
   --space-lg: 2.5rem;
 
-  --content-max-width: 720px;
+  --radius-image: 6px;
+  --radius-pill: 9999px;
+
+  --content-max-width: 1280px;
   --content-padding: var(--space-sm);
 }
 
