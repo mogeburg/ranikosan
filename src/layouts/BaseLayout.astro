@@ -18,6 +18,9 @@ const base = import.meta.env.BASE_URL;
     <meta name="description" content={description} />
     <link rel="icon" href={`${base}/images/favicon.ico`} />
     <title>{title}</title>
+    <script is:inline>
+      (function(){var k='otegaki-sensitive';if(localStorage.getItem(k)==='true'){document.documentElement.dataset.sensitiveShown='';}})();
+    </script>
   </head>
   <body>
     <main class="container">

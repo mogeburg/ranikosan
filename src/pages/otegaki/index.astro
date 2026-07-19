@@ -45,28 +45,25 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
     const filterTabs = document.querySelector(".filter-tabs") as HTMLElement;
     const allCards = () =>
       Array.from(grid.querySelectorAll(".card")) as HTMLElement[];
-    const sensitiveCards = () =>
-      allCards().filter((c) => c.dataset.sensitive === "true");
 
     // --- Sensitive toggle ---
     function setSensitiveState(show: boolean) {
-      sensitiveCards().forEach((card) => {
-        card.dataset.blurred = show ? "false" : "true";
-      });
+      if (show) {
+        document.documentElement.dataset.sensitiveShown = "";
+      } else {
+        delete document.documentElement.dataset.sensitiveShown;
+      }
     }
 
-    // Restore from localStorage
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const checked = saved === "true";
-    sensitiveCheckbox.checked = checked;
-    setSensitiveState(checked);
+    const initialShown = document.documentElement.dataset.sensitiveShown !== undefined;
+    sensitiveCheckbox.checked = initialShown;
 
     sensitiveCheckbox.addEventListener("change", () => {
       localStorage.setItem(STORAGE_KEY, String(sensitiveCheckbox.checked));
       setSensitiveState(sensitiveCheckbox.checked);
     });
 
-    // --- Per-card reveal → global permission ---
+    // --- Blur overlay click → global permission ---
     grid.addEventListener("click", (e) => {
       const overlay = (e.target as HTMLElement).closest(".blur-overlay");
       if (!overlay) return;
