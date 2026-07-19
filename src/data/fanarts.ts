@@ -28,6 +28,7 @@ export const fanarts: Fanart[] = [
     postedAt: "2026-07-13",
     relatedUrl: "https://www.youtube.com/watch?v=radwyYhOpyQ",
     tags: ["DQ4"],
+    sensitive: true,
   },
   {
     imagePath: "images/fanart/20260712_1783849810.6967b0f3a849.webp",

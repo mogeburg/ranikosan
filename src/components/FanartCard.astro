@@ -11,7 +11,7 @@ const imgUrl = `${base}/${fanart.imagePath}`;
 const isYoutube =
   fanart.relatedUrl?.includes("youtube.com") ||
   fanart.relatedUrl?.includes("youtu.be");
-const linkLabel = fanart.relatedUrl ? (isYoutube ? "配信URL" : "URL") : null;
+const linkLabel = fanart.relatedUrl ? (isYoutube ? "配信URL" : "元URL") : null;
 const tagsAttr = fanart.tags.join(" ");
 ---
 
@@ -79,7 +79,7 @@ const tagsAttr = fanart.tags.join(" ");
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: filter 0.15s ease;
+    transition: filter var(--transition-fast);
   }
 
   .card[data-sensitive="true"] .card-image-link img {
@@ -90,11 +90,16 @@ const tagsAttr = fanart.tags.join(" ");
     display: flex;
   }
 
-  :global(html[data-sensitive-shown]) .card[data-sensitive="true"] .card-image-link img {
+  :global(html[data-sensitive-shown])
+    .card[data-sensitive="true"]
+    .card-image-link
+    img {
     filter: none;
   }
 
-  :global(html[data-sensitive-shown]) .card[data-sensitive="true"] .blur-overlay {
+  :global(html[data-sensitive-shown])
+    .card[data-sensitive="true"]
+    .blur-overlay {
     display: none;
   }
 
