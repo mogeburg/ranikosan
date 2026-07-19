@@ -107,13 +107,6 @@
     imgEl.style.display = "none";
     errorEl.setAttribute("aria-hidden", "true");
 
-    // Handle sensitive
-    if (image.sensitive) {
-      wrapper.dataset.sensitive = "true";
-    } else {
-      delete wrapper.dataset.sensitive;
-    }
-
     imgEl.src = image.url;
 
     counter.textContent = `${currentIndex + 1} / ${images.length}`;
@@ -328,17 +321,6 @@
     object-fit: contain;
     border-radius: var(--radius-image, 6px);
     user-select: none;
-  }
-
-  /* Sensitive blur (reuse global toggle) */
-  .modal-image-wrapper[data-sensitive="true"] .modal-image {
-    filter: blur(40px);
-  }
-
-  :global(html[data-sensitive-shown])
-    .modal-image-wrapper[data-sensitive="true"]
-    .modal-image {
-    filter: none;
   }
 
   /* --- Loader --- */

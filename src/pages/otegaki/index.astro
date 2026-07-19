@@ -86,9 +86,15 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
       const card = imageWrapper.closest(".card") as HTMLElement;
       if (!card) return;
 
+      const sensitiveShown = document.documentElement.dataset.sensitiveShown !== undefined;
+
       const visibleCards = Array.from(
         grid.querySelectorAll<HTMLElement>(".card")
-      ).filter((c) => c.style.display !== "none");
+      ).filter((c) => {
+        if (c.style.display === "none") return false;
+        if (c.dataset.sensitive === "true" && !sensitiveShown) return false;
+        return true;
+      });
 
       const index = visibleCards.indexOf(card);
       if (index === -1) return;
