@@ -21,9 +21,9 @@ const tagsAttr = fanart.tags.join(" ");
   data-tags={tagsAttr}
 >
   <div class="card-image-wrapper">
-    <a href={imgUrl} target="_blank" class="card-image-link">
+    <button type="button" class="card-image-link" aria-label="画像を拡大表示">
       <img src={imgUrl} loading="lazy" decoding="async" alt="" />
-    </a>
+    </button>
     {
       fanart.sensitive && (
         <div class="blur-overlay">
@@ -72,6 +72,12 @@ const tagsAttr = fanart.tags.join(" ");
     display: block;
     width: 100%;
     height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
   }
 
   .card-image-link img {

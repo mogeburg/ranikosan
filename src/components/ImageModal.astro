@@ -1,0 +1,417 @@
+---
+// 画像モーダル（ライトボックス）コンポーネント
+// JS で window.ImageModal.open() / close() を公開する
+---
+
+<div
+  id="image-modal"
+  class="modal"
+  aria-hidden="true"
+  role="dialog"
+  aria-label="画像ビューア"
+  aria-modal="true"
+>
+  <div class="modal-backdrop"></div>
+  <div class="modal-pane">
+    <button class="modal-close" type="button" aria-label="閉じる">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 6l12 12M18 6l-12 12" />
+      </svg>
+    </button>
+
+    <button class="modal-nav modal-nav--prev" type="button" aria-label="前の画像" disabled>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+
+    <button class="modal-nav modal-nav--next" type="button" aria-label="次の画像" disabled>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </button>
+
+    <div class="modal-image-wrapper">
+      <div class="modal-loader" aria-hidden="true">
+        <div class="spinner"></div>
+      </div>
+      <img class="modal-image" alt="" />
+      <div class="modal-error" aria-hidden="true">
+        <span>画像を読み込めませんでした</span>
+      </div>
+    </div>
+
+    <div class="modal-counter" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+  interface ModalImage {
+    url: string;
+    sensitive?: boolean;
+  }
+
+  let images: ModalImage[] = [];
+  let currentIndex = 0;
+  let lastFocused: HTMLElement | null = null;
+
+  const modal = document.getElementById("image-modal")!;
+  const backdrop = modal.querySelector(".modal-backdrop") as HTMLElement;
+  const pane = modal.querySelector(".modal-pane") as HTMLElement;
+  const imgEl = modal.querySelector(".modal-image") as HTMLImageElement;
+  const loader = modal.querySelector(".modal-loader") as HTMLElement;
+  const errorEl = modal.querySelector(".modal-error") as HTMLElement;
+  const counter = modal.querySelector(".modal-counter") as HTMLElement;
+  const closeBtn = modal.querySelector(".modal-close") as HTMLButtonElement;
+  const prevBtn = modal.querySelector(".modal-nav--prev") as HTMLButtonElement;
+  const nextBtn = modal.querySelector(".modal-nav--next") as HTMLButtonElement;
+  const wrapper = modal.querySelector(".modal-image-wrapper") as HTMLElement;
+
+  let isOpen = false;
+
+  function open(imageList: ModalImage[], startIndex: number) {
+    images = imageList;
+    currentIndex = startIndex;
+    lastFocused = document.activeElement as HTMLElement;
+
+    isOpen = true;
+    modal.classList.add("modal--open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    closeBtn.focus();
+
+    showImage();
+  }
+
+  function close() {
+    if (!isOpen) return;
+    isOpen = false;
+    modal.classList.remove("modal--open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    imgEl.src = "";
+    errorEl.setAttribute("aria-hidden", "true");
+
+    if (lastFocused) {
+      lastFocused.focus();
+      lastFocused = null;
+    }
+  }
+
+  function showImage() {
+    const image = images[currentIndex];
+    if (!image) return;
+
+    // Reset state
+    loader.style.display = "";
+    imgEl.style.display = "none";
+    errorEl.setAttribute("aria-hidden", "true");
+
+    // Handle sensitive
+    if (image.sensitive) {
+      wrapper.dataset.sensitive = "true";
+    } else {
+      delete wrapper.dataset.sensitive;
+    }
+
+    imgEl.src = image.url;
+
+    counter.textContent = `${currentIndex + 1} / ${images.length}`;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === images.length - 1;
+  }
+
+  imgEl.addEventListener("load", () => {
+    loader.style.display = "none";
+    imgEl.style.display = "block";
+  });
+
+  imgEl.addEventListener("error", () => {
+    loader.style.display = "none";
+    errorEl.setAttribute("aria-hidden", "false");
+  });
+
+  function goPrev() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showImage();
+    }
+  }
+
+  function goNext() {
+    if (currentIndex < images.length - 1) {
+      currentIndex++;
+      showImage();
+    }
+  }
+
+  function goFirst() {
+    if (currentIndex !== 0) {
+      currentIndex = 0;
+      showImage();
+    }
+  }
+
+  function goLast() {
+    const last = images.length - 1;
+    if (currentIndex !== last) {
+      currentIndex = last;
+      showImage();
+    }
+  }
+
+  // --- Event listeners ---
+  closeBtn.addEventListener("click", close);
+  backdrop.addEventListener("click", close);
+  prevBtn.addEventListener("click", goPrev);
+  nextBtn.addEventListener("click", goNext);
+
+  // Click on background (pane padding area) closes modal
+  pane.addEventListener("click", (e) => {
+    if (e.target === pane) close();
+  });
+  // Image area should not propagate to pane
+  wrapper.addEventListener("click", (e) => e.stopPropagation());
+
+  document.addEventListener("keydown", (e) => {
+    if (!isOpen) return;
+    switch (e.key) {
+      case "Escape":
+        e.preventDefault();
+        close();
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        goPrev();
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        goNext();
+        break;
+      case "Home":
+        e.preventDefault();
+        goFirst();
+        break;
+      case "End":
+        e.preventDefault();
+        goLast();
+        break;
+    }
+  });
+
+  // Expose API
+  (window as any).ImageModal = { open, close };
+</script>
+
+<style>
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast, 0.15s ease);
+  }
+
+  .modal--open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    cursor: pointer;
+  }
+
+  .modal-pane {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: var(--space-sm, 1rem);
+    right: var(--space-sm, 1rem);
+    z-index: 10;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    cursor: pointer;
+    transition: background var(--transition-fast, 0.15s ease);
+  }
+
+  .modal-close::after {
+    content: "";
+    position: absolute;
+    inset: -0.75rem;
+    border-radius: inherit;
+  }
+
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  /* --- Nav arrows --- */
+  .modal-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: background var(--transition-fast, 0.15s ease);
+  }
+
+  .modal-nav::after {
+    content: "";
+    position: absolute;
+    inset: -0.75rem;
+    border-radius: inherit;
+  }
+
+  .modal-nav:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .modal-nav:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .modal-nav--prev {
+    left: var(--space-sm, 1rem);
+  }
+
+  .modal-nav--next {
+    right: var(--space-sm, 1rem);
+  }
+
+  /* --- Image area --- */
+  .modal-image-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .modal-image {
+    display: none;
+    max-width: 100%;
+    max-height: calc(100vh - 6rem);
+    object-fit: contain;
+    border-radius: var(--radius-image, 6px);
+    user-select: none;
+  }
+
+  /* Sensitive blur (reuse global toggle) */
+  .modal-image-wrapper[data-sensitive="true"] .modal-image {
+    filter: blur(40px);
+  }
+
+  :global(html[data-sensitive-shown])
+    .modal-image-wrapper[data-sensitive="true"]
+    .modal-image {
+    filter: none;
+  }
+
+  /* --- Loader --- */
+  .modal-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .spinner {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* --- Error --- */
+  .modal-error {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .modal-error[aria-hidden="true"] {
+    display: none;
+  }
+
+  /* --- Counter --- */
+  .modal-counter {
+    position: absolute;
+    bottom: var(--space-sm, 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 768px) {
+    .modal-pane {
+      padding: 2.5rem 1rem;
+    }
+
+    .modal-nav {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .modal-nav--prev {
+      left: 0.25rem;
+    }
+
+    .modal-nav--next {
+      right: 0.25rem;
+    }
+
+    .modal-image {
+      max-height: calc(100vh - 5rem);
+    }
+  }
+</style>
