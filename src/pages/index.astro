@@ -1,0 +1,75 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const base = import.meta.env.BASE_URL;
+const topImg = `${base}/images/top.png`;
+const raniko001 = `${base}/images/raniko001.png`;
+const raniko002 = `${base}/images/raniko002.png`;
+---
+
+<BaseLayout title="らにこさんのホームページ">
+  <div class="top">
+    <a href={`${base}/otegaki/`} class="top-link">
+      <img src={topImg} alt="らにこさんトップ画像" class="top-image" />
+    </a>
+    <ul class="links">
+      <li>
+        <a href={raniko001} target="_blank" rel="noopener noreferrer">
+          立ち絵
+        </a>
+      </li>
+      <li>
+        <a href={raniko002} target="_blank" rel="noopener noreferrer">
+          作画資料
+        </a>
+      </li>
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - var(--space-lg) * 2);
+    text-align: center;
+  }
+
+  .top-link {
+    display: block;
+  }
+
+  .top-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    transition: opacity 0.2s ease;
+  }
+
+  .top-link:hover .top-image {
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+  }
+
+  .links a {
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .top {
+      gap: var(--space-md);
+    }
+  }
+</style>
