@@ -25,6 +25,12 @@
   --content-padding: var(--space-sm);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0s;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #090909;

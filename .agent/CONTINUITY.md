@@ -7,6 +7,8 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
 - Astro 7.0.9 でプロジェクトをゼロから構築済み。
 - TOP(`/`) と おてがき(`/otegaki`) の2ページが完成（2026-07-19 おてがきギャラリー実装）。
 - `npm run build` と `npm run check` がエラー0で通ることを確認済み（2026-07-19）。
+- ファンアートデータを JSON に分離し、型定義のみ `.ts` に保持（2026-07-19）。
+- `prefers-reduced-motion` 対応を追加（2026-07-19）。
 
 ## Decisions
 - スタック: Astro 7 + TypeScript（strict プリセット継承）。[CODE]
@@ -16,7 +18,8 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
 - 内部リンクは `import.meta.env.BASE_URL` を使用。[CODE]
 - デプロイ: `.github/workflows/deploy.yml`（push main で自動ビルド＋Pages 公開）。[CODE]
 - フォント: システムゴシックスタック。SP/PC はメディアクエリ(768px)。ダークテーマは `prefers-color-scheme`。[CODE]
-- おてがきギャラリー: `src/data/fanarts.ts` をデータソースとし、`FanartCard` + `FanartGrid` の2コンポーネント構成。画像は `public/images/fanart/` に格納。タグフィルター・センシティブ切替（localStorage永続化）を実装。[CODE]
+- おてがきギャラリー: `src/data/fanarts.ts`（型定義）＋`src/data/fanarts.json`（データ）をデータソースとし、`FanartCard` + `FanartGrid` の2コンポーネント構成。画像は `public/images/fanart/` に格納。タグフィルター・センシティブ切替（localStorage永続化）を実装。[CODE]
+- `prefers-reduced-motion` 対応: CSS変数 `--transition-fast` を `0s` に上書き。`global.css` に実装。[CODE]
 
 ## Open Issues
 - GitHub Actions の初回実行後、リポジトリの Pages 設定を "GitHub Actions" ソースに切り替える必要がある（ユーザー作業）。
