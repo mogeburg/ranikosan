@@ -7,11 +7,7 @@ export type Fanart = {
   sensitive?: boolean;
 };
 
-// MEMO: imagePath は public/otegaki/ 以下のファイル名のみを書くこと。
-//       実際のURLは表示時に BASE_URL + "otegaki/" + imagePath で組み立てられる。
 // MEMO: 新しい物ほど上に追加していくこと
-// MEMO: 成人向けなどのセンシティブな画像には sensitive: true を付けること。
-//       付けた画像はグリッドでブラー表示され、解除ボタン押下で表示される。
 export const fanarts: Fanart[] = [
   {
     imagePath: "20260717_HNb1eRCbQAAB8UY.png",
@@ -73,6 +69,3 @@ export const fanarts: Fanart[] = [
     tags: ["DQ4"],
   },
 ];
-
-export const fanartImageUrl = (imagePath: string): string =>
-  `${import.meta.env.BASE_URL}/${imagePath}`;
