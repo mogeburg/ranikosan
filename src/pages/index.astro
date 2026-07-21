@@ -1,6 +1,5 @@
 ---
 import ImageModal from "../components/ImageModal.astro";
-import SocialLinks from "../components/SocialLinks.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const base = import.meta.env.BASE_URL;
@@ -14,8 +13,6 @@ const topImg = `${base}/images/top.png`;
         <img src={topImg} alt="らにこさんトップ画像" class="hero-image" />
       </a>
     </div>
-
-    <SocialLinks variant="round" />
   </div>
 
   <ImageModal />
