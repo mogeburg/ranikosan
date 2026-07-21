@@ -8,29 +8,34 @@ function isActive(href: string) {
 }
 
 const links = [
-  { href: `${base}/`, label: "トップ" },
-  { href: `${base}/about/`, label: "なにココ" },
-  { href: `${base}/otegaki/`, label: "おてがき" },
+  { href: `${base}/`, label: "トップ", icon: "M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" },
+  { href: `${base}/about/`, label: "なにココ", icon: "M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" },
+  { href: `${base}/otegaki/`, label: "おてがき", icon: "M3 17.25V21H6.75L17.81 9.94L14.06 6.19L3 17.25ZM20.71 7.04C21.1 6.65 21.1 6.02 20.71 5.63L18.37 3.29C17.98 2.9 17.35 2.9 16.96 3.29L15.13 5.12L18.88 8.87L20.71 7.04Z" },
 ];
 ---
 
 <nav class="navbar">
-  {
-    links.map(({ href, label }) => {
-      const active = isActive(href);
-      return (
-        <a
-          href={href}
-          class="nav-link"
-          data-active={active}
-          aria-disabled={active ? "true" : undefined}
-          tabindex={active ? -1 : undefined}
-        >
-          {label}
-        </a>
-      );
-    })
-  }
+  <div class="navbar-inner">
+    {
+      links.map(({ href, label, icon }) => {
+        const active = isActive(href);
+        return (
+          <a
+            href={href}
+            class="nav-link"
+            data-active={active}
+            aria-label={label}
+            aria-disabled={active ? "true" : undefined}
+            tabindex={active ? -1 : undefined}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d={icon} />
+            </svg>
+          </a>
+        );
+      })
+    }
+  </div>
 </nav>
 
 <style>
@@ -43,19 +48,49 @@ const links = [
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
+    height: 3rem;
+    pointer-events: none;
+  }
+
+  .navbar-inner {
+    display: inline-flex;
+    align-items: center;
+    pointer-events: auto;
+    background: color-mix(in srgb, var(--color-surface) 65%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .nav-link {
-    padding: 0.5rem 1.2rem;
-    font-size: 0.875rem;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.875rem;
     color: var(--color-text);
     text-decoration: none;
     transition:
       color var(--transition-fast),
       background var(--transition-fast);
+  }
+
+  .nav-link {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav-link:first-child {
+    border-left: 1px solid var(--color-border);
+    border-radius: var(--radius-image) 0 0 var(--radius-image);
+  }
+
+  .nav-link:last-child {
+    border-right: 1px solid var(--color-border);
+    border-radius: 0 var(--radius-image) var(--radius-image) 0;
+  }
+
+  .nav-link + .nav-link {
+    border-left: 1px solid var(--color-border);
   }
 
   .nav-link:hover {
