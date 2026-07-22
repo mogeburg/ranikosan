@@ -59,6 +59,7 @@ const links = [
     background: color-mix(in srgb, var(--color-surface) 65%, transparent);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius-image);
   }
 
   .nav-link {
@@ -73,24 +74,12 @@ const links = [
       background var(--transition-fast);
   }
 
-  .nav-link {
-    border: none;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-  }
-
   .nav-link:first-child {
-    border-left: 1px solid var(--color-border);
     border-radius: var(--radius-image) 0 0 var(--radius-image);
   }
 
   .nav-link:last-child {
-    border-right: 1px solid var(--color-border);
     border-radius: 0 var(--radius-image) var(--radius-image) 0;
-  }
-
-  .nav-link + .nav-link {
-    border-left: 1px solid var(--color-border);
   }
 
   .nav-link:hover {
