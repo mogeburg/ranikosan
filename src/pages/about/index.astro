@@ -5,6 +5,7 @@ import ImageModal from "../../components/ImageModal.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import raniko001 from "../../assets/images/raniko001.png";
 import raniko002 from "../../assets/images/raniko002.png";
+import raniko003 from "../../assets/images/raniko003.jpg";
 ---
 
 <BaseLayout title="らにこさんについて | らにこさんのホームページ">
@@ -12,7 +13,7 @@ import raniko002 from "../../assets/images/raniko002.png";
     <section class="section">
       <Heading tag="h1" class="section-title">なにココ</Heading>
       <p class="section-text">
-        らにこさんのホームページです。らにこさんについてのことや、絵・リンク。描いて頂いたファンアートなどが見れます。
+        らにこさんのホームページです。らにこさんについてや、絵、SNSリンク。描いて頂いたファンアートなどが見れます。
       </p>
     </section>
 
@@ -37,6 +38,12 @@ import raniko002 from "../../assets/images/raniko002.png";
             <Image src={raniko002} alt="作画メモ" class="illust-img" />
           </button>
           <figcaption class="illust-caption">作画メモ</figcaption>
+        </figure>
+        <figure class="illust-figure">
+          <button type="button" class="illust-img-btn" aria-label="日常">
+            <Image src={raniko003} alt="日常" class="illust-img" />
+          </button>
+          <figcaption class="illust-caption">日常</figcaption>
         </figure>
       </div>
     </section>
@@ -74,8 +81,6 @@ import raniko002 from "../../assets/images/raniko002.png";
 
 <style>
   .page {
-    max-width: 720px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
@@ -92,7 +97,7 @@ import raniko002 from "../../assets/images/raniko002.png";
 
   .illust-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: var(--space-sm);
   }
 
