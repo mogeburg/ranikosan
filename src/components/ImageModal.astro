@@ -42,7 +42,6 @@
       </div>
     </div>
 
-    <div class="modal-counter" aria-live="polite"></div>
   </div>
 </div>
 
@@ -111,8 +110,6 @@
     errorEl.setAttribute("aria-hidden", "true");
 
     imgEl.src = image.url;
-
-    counter.textContent = `${currentIndex + 1} / ${images.length}`;
 
     prevBtn.disabled = currentIndex === 0;
     nextBtn.disabled = currentIndex === images.length - 1;
@@ -245,9 +242,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.45);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.55);
     color: #fff;
     cursor: pointer;
     transition: background var(--transition-fast, 0.15s ease);
@@ -261,7 +258,7 @@
   }
 
   .modal-close:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.75);
   }
 
   /* --- Nav arrows --- */
@@ -274,9 +271,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.45);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.55);
     color: #fff;
     cursor: pointer;
     transform: translateY(-50%);
@@ -291,7 +288,7 @@
   }
 
   .modal-nav:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.75);
   }
 
   .modal-nav:disabled {
@@ -322,7 +319,6 @@
     max-width: 100%;
     max-height: calc(100vh - 6rem);
     object-fit: contain;
-    border-radius: var(--radius-image, 6px);
     user-select: none;
   }
 
@@ -362,18 +358,6 @@
 
   .modal-error[aria-hidden="true"] {
     display: none;
-  }
-
-  /* --- Counter --- */
-  .modal-counter {
-    position: absolute;
-    bottom: var(--space-sm, 1rem);
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.8125rem;
-    font-variant-numeric: tabular-nums;
-    user-select: none;
   }
 
   /* --- Responsive --- */
