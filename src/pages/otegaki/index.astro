@@ -5,7 +5,6 @@ import ImageModal from "../../components/ImageModal.astro";
 import Heading from "../../components/Heading.astro";
 import { fanarts } from "../../data/fanarts";
 
-const base = import.meta.env.BASE_URL;
 const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
 ---
 
@@ -31,7 +30,7 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
     </div>
   </div>
 
-  <FanartGrid fanarts={fanarts} base={base} />
+  <FanartGrid fanarts={fanarts} />
 
   <ImageModal />
 </BaseLayout>
@@ -57,10 +56,17 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
       } else {
         delete document.documentElement.dataset.sensitiveShown;
       }
+      document
+        .querySelectorAll<HTMLElement>(".card[data-sensitive='true'] .card-image-link")
+        .forEach((el) => (el.tabIndex = show ? 0 : -1));
+      document
+        .querySelectorAll<HTMLElement>(".card[data-sensitive='true'] .blur-overlay")
+        .forEach((el) => (el.tabIndex = show ? -1 : 0));
     }
 
     const initialShown = document.documentElement.dataset.sensitiveShown !== undefined;
     sensitiveCheckbox.checked = initialShown;
+    setSensitiveState(initialShown);
 
     sensitiveCheckbox.addEventListener("change", () => {
       localStorage.setItem(STORAGE_KEY, String(sensitiveCheckbox.checked));
@@ -76,6 +82,10 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
         sensitiveCheckbox.checked = true;
         localStorage.setItem(STORAGE_KEY, "true");
         setSensitiveState(true);
+        const btn = (overlay as HTMLElement)
+          .closest(".card")
+          ?.querySelector<HTMLElement>(".card-image-link");
+        btn?.focus();
         return;
       }
 

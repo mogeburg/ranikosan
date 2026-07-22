@@ -4,16 +4,15 @@ import type { Fanart } from "../data/fanarts";
 
 interface Props {
   fanarts: Fanart[];
-  base: string;
 }
 
-const { fanarts, base } = Astro.props;
+const { fanarts } = Astro.props;
 ---
 
 <div class="grid">
   {
-    fanarts.map((fanart) => (
-      <FanartCard fanart={fanart} base={base} />
+    fanarts.map((fanart, index) => (
+      <FanartCard fanart={fanart} lcp={index === 0} />
     ))
   }
 </div>

@@ -1,19 +1,27 @@
 ---
+import { Image } from "astro:assets";
 import ImageModal from "../components/ImageModal.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import topImg from "../assets/images/top.png";
+import unnamedImg from "../assets/images/unnamed.png";
 
 const base = import.meta.env.BASE_URL;
-const topImg = `${base}/images/top.png`;
-const unnamedImg = `${base}/images/unnamed.png`;
 ---
 
 <BaseLayout title="らにこさんのホームページ">
   <div class="page">
     <div class="hero">
       <a href={`${base}/otegaki/`} class="hero-link">
-        <img src={topImg} alt="らにこさんトップ画像" class="hero-image" />
+        <Image
+          src={topImg}
+          alt="らにこさんトップ画像"
+          class="hero-image"
+          fetchpriority="high"
+          loading="eager"
+          decoding="sync"
+        />
       </a>
-      <img src={unnamedImg} alt="" class="unnamed-image" />
+      <Image src={unnamedImg} alt="" class="unnamed-image" />
     </div>
   </div>
 

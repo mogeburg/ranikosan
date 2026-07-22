@@ -7,6 +7,7 @@
   id="image-modal"
   class="modal"
   aria-hidden="true"
+  inert
   role="dialog"
   aria-label="画像ビューア"
   aria-modal="true"
@@ -77,6 +78,7 @@
     isOpen = true;
     modal.classList.add("modal--open");
     modal.setAttribute("aria-hidden", "false");
+    modal.removeAttribute("inert");
     document.body.style.overflow = "hidden";
     closeBtn.focus();
 
@@ -88,6 +90,7 @@
     isOpen = false;
     modal.classList.remove("modal--open");
     modal.setAttribute("aria-hidden", "true");
+    modal.setAttribute("inert", "");
     document.body.style.overflow = "";
     imgEl.src = "";
     errorEl.setAttribute("aria-hidden", "true");

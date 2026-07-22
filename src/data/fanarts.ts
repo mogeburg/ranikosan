@@ -1,3 +1,5 @@
+import type { ImageMetadata } from "astro";
+
 export type Fanart = {
   imagePath: string;
   postedAt: string;
@@ -5,7 +7,19 @@ export type Fanart = {
   relatedUrl?: string;
   tags: string[];
   sensitive?: boolean;
+  image: ImageMetadata;
 };
 
 import data from "./fanarts.json";
-export const fanarts: Fanart[] = data;
+
+const fanartGlob = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/images/fanart/*.{webp,png}",
+  { eager: true },
+);
+
+export const fanarts: Fanart[] = data.map((f) => {
+  const filename = f.imagePath.replace("images/fanart/", "");
+  const key = `../assets/images/fanart/${filename}`;
+  const image = fanartGlob[key]!.default;
+  return { ...f, image };
+});

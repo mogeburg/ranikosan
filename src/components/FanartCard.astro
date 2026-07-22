@@ -1,13 +1,13 @@
 ---
+import { Image } from "astro:assets";
 import type { Fanart } from "../data/fanarts";
 
 interface Props {
   fanart: Fanart;
-  base: string;
+  lcp?: boolean;
 }
 
-const { fanart, base } = Astro.props;
-const imgUrl = `${base}/${fanart.imagePath}`;
+const { fanart, lcp } = Astro.props;
 const isYoutube =
   fanart.relatedUrl?.includes("youtube.com") ||
   fanart.relatedUrl?.includes("youtu.be");
@@ -21,15 +21,15 @@ const tagsAttr = fanart.tags.join(" ");
   data-tags={tagsAttr}
 >
   <div class="card-image-wrapper">
-    <button type="button" class="card-image-link" aria-label="画像を拡大表示">
-      <img src={imgUrl} loading="lazy" decoding="async" alt="" />
+    <button type="button" class="card-image-link" aria-label="画像を拡大表示" tabindex={fanart.sensitive ? -1 : undefined}>
+      <Image src={fanart.image} alt="" class="card-image" loading={lcp ? "eager" : "lazy"} fetchpriority={lcp ? "high" : undefined} />
     </button>
     {
       fanart.sensitive && (
-        <div class="blur-overlay">
+        <button type="button" class="blur-overlay" aria-label="センシティブな画像を表示">
           <span class="blur-overlay-note">センシティブな内容を含みます</span>
           <span class="blur-overlay-text">クリックで表示</span>
-        </div>
+        </button>
       )
     }
   </div>
@@ -121,6 +121,11 @@ const tagsAttr = fanart.tags.join(" ");
     cursor: pointer;
     z-index: 1;
     user-select: none;
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    width: 100%;
   }
 
   .blur-overlay-note {
