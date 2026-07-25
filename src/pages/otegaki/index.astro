@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import FanartGrid from "../../components/FanartGrid.astro";
-import ImageModal from "../../components/ImageModal.astro";
-import Heading from "../../components/Heading.astro";
-import { fanarts } from "../../data/fanarts";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import FanartGrid from "@components/FanartGrid.astro";
+import ImageModal from "@components/ImageModal.astro";
+import Heading from "@components/Heading.astro";
+import { fanarts } from "@data/fanarts";
 
 const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
 ---
