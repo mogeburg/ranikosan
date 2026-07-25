@@ -73,8 +73,30 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
       setSensitiveState(sensitiveCheckbox.checked);
     });
 
+    // --- Card tag click ---
+    function updateFilterUI() {
+      filterTabs.querySelectorAll(".filter-tab").forEach((t) => {
+        const el = t as HTMLElement;
+        const isActive = el.dataset.tag === activeTag;
+        el.classList.toggle("active", isActive);
+        el.setAttribute("aria-selected", String(isActive));
+      });
+      document.querySelectorAll<HTMLElement>(".card-tag").forEach((el) => {
+        el.classList.toggle("active", el.dataset.tag === activeTag);
+      });
+    }
+
     // --- Grid click delegation ---
     grid.addEventListener("click", (e) => {
+      const cardTag = (e.target as HTMLElement).closest(".card-tag") as HTMLElement | null;
+      if (cardTag) {
+        const tag = cardTag.dataset.tag!;
+        activeTag = activeTag === tag ? "all" : tag;
+        updateFilterUI();
+        applyFilter();
+        return;
+      }
+
       const overlay = (e.target as HTMLElement).closest(".blur-overlay");
 
       // Blur overlay → toggle global sensitive state
@@ -140,13 +162,7 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
       const tag = tab.dataset.tag!;
       activeTag = activeTag === tag ? "all" : tag;
 
-      filterTabs.querySelectorAll(".filter-tab").forEach((t) => {
-        const el = t as HTMLElement;
-        const isActive = el.dataset.tag === activeTag;
-        el.classList.toggle("active", isActive);
-        el.setAttribute("aria-selected", String(isActive));
-      });
-
+      updateFilterUI();
       applyFilter();
     });
   }
