@@ -1,7 +1,7 @@
 import type { ImageMetadata } from "astro";
 
 export type Fanart = {
-  imagePaths: string[];
+  filenames: string[];
   postedAt: string;
   author?: string;
   relatedUrl?: string;
@@ -18,9 +18,8 @@ const fanartGlob = import.meta.glob<{ default: ImageMetadata }>(
 );
 
 export const fanarts: Fanart[] = data.map((f) => {
-  const images = f.imagePaths.map((path) => {
-    const filename = path.replace("images/fanart/", "");
-    const key = `../assets/images/fanart/${filename}`;
+  const images = f.filenames.map((name) => {
+    const key = `../assets/images/fanart/${name}`;
     return fanartGlob[key]!.default;
   });
   return { ...f, images };
