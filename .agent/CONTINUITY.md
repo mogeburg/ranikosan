@@ -4,16 +4,21 @@
 Astro + TypeScript で個人ホームページを構築し、GitHub Pages（https://mogeburg.github.io/ranikosan/）へ公開する。
 
 ## Current State
-- Astro 7.0.9 でプロジェクトをゼロから構築済み。
-- TOP(`/`) と おてがき(`/otegaki`) の2ページが完成（2026-07-19 おてがきギャラリー実装）。
-- `npm run build` と `npm run check` がエラー0で通ることを確認済み（2026-07-19）。
-- ファンアートデータを JSON に分離し、型定義のみ `.ts` に保持（2026-07-19）。
-- `prefers-reduced-motion` 対応を追加（2026-07-19）。
-- パフォーマンス改善完了（2026-07-22）:
+- Astro 7.0.7 でプロジェクトをゼロから構築済み。
+- TOP(`/`) と おてがき(`/otegaki`) の2ページが完成（おてがきギャラリー実装）。
+- `npm run build` と `npm run check` がエラー0で通ることを確認済み。
+- ファンアートデータを JSON に分離し、型定義のみ `.ts` に保持。
+- `prefers-reduced-motion` 対応を追加。
+- パフォーマンス改善完了:
   - 全画像を `public/` → `src/assets/` に移行し Astro の `<Image />` で自動 WebP 最適化
-  - top.png: 112kB → 29kB（74%削減）、raniko002.png: 311kB → 71kB（77%削減）
+  - top.png: 112kB → 29kB、raniko002.png: 311kB → 71kB
   - LCP 画像に `fetchpriority="high"` + `loading="eager"` を設定
   - CSS をインライン化（`build.inlineStylesheets: 'always'`）
+- おてがきカード複数画像対応（2026-07-26）:
+  - `imagePath` → `imagePaths: string[]`、`image` → `images: ImageMetadata[]`
+  - カード内に CSS scroll-snap ベースのカルーセルを実装（ボタン＋ドット＋タッチスワイプ）
+  - 2枚目以降の画像は遅延読み込み
+  - モーダルは全カード全画像をフラット連結して表示
 
 ## Decisions
 - スタック: Astro 7 + TypeScript（strict プリセット継承）。[CODE]

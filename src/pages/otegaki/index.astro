@@ -88,7 +88,10 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
 
     // --- Grid click delegation ---
     grid.addEventListener("click", (e) => {
-      const cardTag = (e.target as HTMLElement).closest(".card-tag") as HTMLElement | null;
+      const target = e.target as HTMLElement;
+
+      // Card tag click → filter
+      const cardTag = target.closest(".card-tag") as HTMLElement | null;
       if (cardTag) {
         const tag = cardTag.dataset.tag!;
         activeTag = activeTag === tag ? "all" : tag;
@@ -97,9 +100,8 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
         return;
       }
 
-      const overlay = (e.target as HTMLElement).closest(".blur-overlay");
-
       // Blur overlay → toggle global sensitive state
+      const overlay = target.closest(".blur-overlay");
       if (overlay) {
         sensitiveCheckbox.checked = true;
         localStorage.setItem(STORAGE_KEY, "true");
@@ -111,13 +113,17 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
         return;
       }
 
-      // Image area → open modal
-      const imageWrapper = (e.target as HTMLElement).closest(".card-image-wrapper");
-      if (!imageWrapper) return;
+      // Carousel controls → handled by CardCarousel
+      if (target.closest(".carousel-btn") || target.closest(".carousel-dot")) return;
 
-      const card = imageWrapper.closest(".card") as HTMLElement;
+      // Image click → open modal
+      const imageLink = target.closest(".card-image-link") as HTMLElement | null;
+      if (!imageLink) return;
+
+      const card = imageLink.closest(".card") as HTMLElement;
       if (!card) return;
 
+      const slideIndex = parseInt(imageLink.dataset.slideIndex || "0", 10);
       const sensitiveShown = document.documentElement.dataset.sensitiveShown !== undefined;
 
       const visibleCards = Array.from(
@@ -128,18 +134,21 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
         return true;
       });
 
-      const index = visibleCards.indexOf(card);
-      if (index === -1) return;
+      const images: { url: string; sensitive: boolean }[] = [];
+      let flatIndex = 0;
 
-      const images = visibleCards.map((c) => {
-        const img = c.querySelector<HTMLImageElement>(".card-image-link img")!;
-        return {
-          url: img.src,
-          sensitive: c.dataset.sensitive === "true",
-        };
-      });
+      for (const c of visibleCards) {
+        const imgEls = c.querySelectorAll<HTMLImageElement>(".carousel-slide .card-image-link img");
+        const isTargetCard = c === card;
+        imgEls.forEach((img, i) => {
+          images.push({ url: img.src, sensitive: c.dataset.sensitive === "true" });
+          if (isTargetCard && i === slideIndex) {
+            flatIndex = images.length - 1;
+          }
+        });
+      }
 
-      (window as any).ImageModal.open(images, index);
+      (window as any).ImageModal.open(images, flatIndex);
     });
 
     // --- Tag filter ---
