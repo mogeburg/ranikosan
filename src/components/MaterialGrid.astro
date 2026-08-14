@@ -32,17 +32,23 @@ const { items } = Astro.props;
 </div>
 
 <script>
+  import { IMAGE_MODAL_OPEN_EVENT } from "@components/imageModal";
+
   const grid = document.querySelector(".material-grid");
 
   function openModal(imgEl: HTMLImageElement) {
     const images = Array.from(
       document.querySelectorAll<HTMLImageElement>(".material-img"),
-    ).map((i) => ({ url: i.src, sensitive: false }));
+    ).map((i) => ({ url: i.src }));
 
     const index = images.findIndex((i) => i.url === imgEl.src);
     if (index === -1) return;
 
-    (window as any).ImageModal.open(images, index);
+    document.dispatchEvent(
+      new CustomEvent(IMAGE_MODAL_OPEN_EVENT, {
+        detail: { images, startIndex: index },
+      }),
+    );
   }
 
   grid?.addEventListener("click", (e) => {

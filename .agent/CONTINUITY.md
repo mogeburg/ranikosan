@@ -32,12 +32,13 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
   - カード内に CSS scroll-snap ベースのカルーセルを実装（ボタン＋ドット＋タッチスワイプ）
   - 2枚目以降の画像は遅延読み込み
   - モーダルは全カード全画像をフラット連結して表示
+- 未使用コード整理（2026-08-14）: `(window as any).ImageModal` グローバルAPIを廃止し、`imagemodal:open` CustomEvent 方式に変更。共有契約は新規 `src/components/imageModal.ts`（イベント名定数＋`ModalImage`/`ImageModalOpenDetail`型）に集約。削除: `ImageModal` の未参照 `counter`・`sensitive` フィールド、`MaterialGrid` の `sensitive:false` ハードコード、`index.astro` の `.illust-grid` CSS、`global.css` の `--space-xs`、`SocialLinks` の無意味な三項演算子。
 
 ## Decisions
 - 単一ページ化: トップに全機能を統合。旧URL(`/about/`, `/otegaki/`)へのリダイレクトなし（404）。[USER]
 - top.png: `width:120px` + `aspect-ratio:1/1` + `object-fit:cover` で真円（`border-radius:9999px`）。正方クロップは左右を切る中央寄せ。[USER][CODE]
 - 2カラム（2026-08-13）: 左=プロフィールカード（surface背景+border+角丸・中央寄せ）/ 右=コンテンツ。列比 1:3、`#top` アンカーはグリッドのラッパー要素に付与。[USER][CODE]
-- 資料集（2026-08-14）: `MaterialGrid.astro` が単一コンポーネントとして所有。グリッドは `repeat(auto-fit, minmax(180px, 1fr))`（SP 768px以下は2列固定）、タイルは 1/1 正方形 `object-fit: cover`。キャプションは画像下部にオーバーレイ（左下寄せ・下部40%の黒グラデーション rgba(0,0,0,0.75)→透明・白文字・`pointer-events:none`）。ホバー brightness(0.85)、`:focus-visible` accent 枠。モーダルは既存 `ImageModal` のグローバルAPIをそのまま利用（全枚フラット閲覧、モーダル内キャプションなし）。[USER][CODE]
+- 資料集（2026-08-14）: `MaterialGrid.astro` が単一コンポーネントとして所有。グリッドは `repeat(auto-fit, minmax(180px, 1fr))`（SP 768px以下は2列固定）、タイルは 1/1 正方形 `object-fit: cover`。キャプションは画像下部にオーバーレイ（左下寄せ・下部40%の黒グラデーション rgba(0,0,0,0.75)→透明・白文字・`pointer-events:none`）。ホバー brightness(0.85)、`:focus-visible` accent 枠。モーダルは `ImageModal` の CustomEvent API（`imagemodal:open`）で呼び出し（全枚フラット閲覧、モーダル内キャプションなし）。[USER][CODE]
   - ※ 当初 3/4 縦長で試したが縦幅が過大（約656px）→ユーザー指摘で 1/1 に回帰（約512px）。[USER]
 - Navbar 削除（2026-08-14）: 単一ページ化の完了に伴い `Navbar.astro` を削除。`BaseLayout` の padding から Navbar 高さ分（3rem）を除去。[USER]
 - スムーズスクロール: `global.css` に `prefers-reduced-motion: no-preference` 時のみ `scroll-behavior: smooth`。[CODE]
@@ -52,6 +53,7 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
 - `prefers-reduced-motion` 対応: CSS変数 `--transition-fast` を `0s` に上書き。`global.css` に実装。[CODE]
 - 画像最適化: Astro 組み込み `<Image />` コンポーネントを使用。静的画像は直接 import、ファンアートは `import.meta.glob` で一括 import。[CODE]
 - CSS インライン化: `astro.config.mjs` で `build.inlineStylesheets: 'always'` に設定。[CODE]
+- モーダル連携（2026-08-14）: `window.ImageModal` グローバルAPIを廃止。呼び出しは `imagemodal:open` CustomEvent 経由（`src/components/imageModal.ts` でイベント名と型を共有）。Astro の `<script>` はバンドル単位でスコープが分離されるため、バンドル間通信はDOMイベントのみ有効。[CODE]
 
 ## Open Issues
 - GitHub Actions の初回実行後、リポジトリの Pages 設定を "GitHub Actions" ソースに切り替える必要がある（ユーザー作業）。

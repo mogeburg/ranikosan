@@ -75,6 +75,11 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
 </BaseLayout>
 
 <script>
+  import {
+    IMAGE_MODAL_OPEN_EVENT,
+    type ModalImage,
+  } from "@components/imageModal";
+
   const STORAGE_KEY = "otegaki-sensitive";
 
   function initOtegaki() {
@@ -182,7 +187,7 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
         return true;
       });
 
-      const images: { url: string; sensitive: boolean }[] = [];
+      const images: ModalImage[] = [];
       let flatIndex = 0;
 
       for (const c of visibleCards) {
@@ -191,17 +196,18 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
         );
         const isTargetCard = c === card;
         imgEls.forEach((img, i) => {
-          images.push({
-            url: img.src,
-            sensitive: c.dataset.sensitive === "true",
-          });
+          images.push({ url: img.src });
           if (isTargetCard && i === slideIndex) {
             flatIndex = images.length - 1;
           }
         });
       }
 
-      (window as any).ImageModal.open(images, flatIndex);
+      document.dispatchEvent(
+        new CustomEvent(IMAGE_MODAL_OPEN_EVENT, {
+          detail: { images, startIndex: flatIndex },
+        }),
+      );
     });
 
     // --- Tag filter ---
@@ -341,10 +347,6 @@ const tags = [...new Set(fanarts.flatMap((f) => f.tags))];
 
     .top-grid {
       gap: var(--space-md);
-    }
-
-    .illust-grid {
-      grid-template-columns: 1fr 1fr;
     }
   }
 </style>

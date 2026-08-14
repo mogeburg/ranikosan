@@ -1,6 +1,6 @@
 ---
 // 画像モーダル（ライトボックス）コンポーネント
-// JS で window.ImageModal.open() / close() を公開する
+// 呼び出しは imagemodal:open イベント（CustomEvent）で受け取る
 ---
 
 <div
@@ -46,10 +46,11 @@
 </div>
 
 <script>
-  interface ModalImage {
-    url: string;
-    sensitive?: boolean;
-  }
+  import {
+    IMAGE_MODAL_OPEN_EVENT,
+    type ImageModalOpenDetail,
+    type ModalImage,
+  } from "@components/imageModal";
 
   let images: ModalImage[] = [];
   let currentIndex = 0;
@@ -61,7 +62,6 @@
   const imgEl = modal.querySelector(".modal-image") as HTMLImageElement;
   const loader = modal.querySelector(".modal-loader") as HTMLElement;
   const errorEl = modal.querySelector(".modal-error") as HTMLElement;
-  const counter = modal.querySelector(".modal-counter") as HTMLElement;
   const closeBtn = modal.querySelector(".modal-close") as HTMLButtonElement;
   const prevBtn = modal.querySelector(".modal-nav--prev") as HTMLButtonElement;
   const nextBtn = modal.querySelector(".modal-nav--next") as HTMLButtonElement;
@@ -193,8 +193,11 @@
     }
   });
 
-  // Expose API
-  (window as any).ImageModal = { open, close };
+  document.addEventListener(IMAGE_MODAL_OPEN_EVENT, (e) => {
+    const { images, startIndex } = (e as CustomEvent<ImageModalOpenDetail>)
+      .detail;
+    open(images, startIndex);
+  });
 </script>
 
 <style>
