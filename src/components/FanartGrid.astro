@@ -1,6 +1,6 @@
 ---
-import FanartCard from "./FanartCard.astro";
 import type { Fanart } from "@data/fanarts";
+import FanartCard from "./FanartCard.astro";
 
 interface Props {
   fanarts: Fanart[];
@@ -20,7 +20,7 @@ const { fanarts } = Astro.props;
 <style>
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
     gap: var(--space-sm);
   }
 

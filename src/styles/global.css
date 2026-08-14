@@ -7,20 +7,21 @@
   --color-text-muted: #777777;
   --color-border: #000000;
   --color-accent: #5cb800;
+  --color-accent-text: #111111;
 
   --space-sm: 1rem;
   --space-md: 1.5rem;
   --space-lg: 2.5rem;
 
-  --radius-image: 6px;
   --radius-pill: 9999px;
+  --shadow-hard: 6px 6px var(--color-border);
   --transition-fast: 0.15s ease;
   --image-hover-opacity: 0.85;
 
   --color-interactive-border: var(--color-border);
   --color-interactive-border-hover: var(--color-accent);
 
-  --content-max-width: 1280px;
+  --content-max-width: 960px;
   --content-padding: var(--space-sm);
 }
 
@@ -38,6 +39,7 @@
     --color-text-muted: #8f8f8f;
     --color-border: #2a2a2a;
     --color-accent: #9eff3a;
+    --color-accent-text: #111111;
   }
 }
 
@@ -56,7 +58,7 @@ body {
   margin: 0;
   background-color: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.7;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
