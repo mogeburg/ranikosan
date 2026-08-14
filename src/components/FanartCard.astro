@@ -402,7 +402,13 @@ const multiple = fanart.images.length > 1;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: filter var(--transition-fast);
+    transition:
+      filter var(--transition-fast),
+      opacity var(--transition-fast);
+  }
+
+  .card-image-link:hover img {
+    opacity: var(--image-hover-opacity);
   }
 
   /* --- Sensitive blur --- */

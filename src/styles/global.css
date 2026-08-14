@@ -16,6 +16,7 @@
   --radius-image: 6px;
   --radius-pill: 9999px;
   --transition-fast: 0.15s ease;
+  --image-hover-opacity: 0.85;
 
   --color-interactive-border: var(--color-border);
   --color-interactive-border-hover: var(--color-accent);

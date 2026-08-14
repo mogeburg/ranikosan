@@ -66,8 +66,14 @@ import SocialLinks from "./SocialLinks.astro";
   }
 
   .unnamed-image {
+    display: block;
     max-width: 100%;
     height: auto;
+    transition: opacity var(--transition-fast);
+  }
+
+  .profile-body a:hover .unnamed-image {
+    opacity: var(--image-hover-opacity);
   }
 
   .profile-body :global(.variant-round) {

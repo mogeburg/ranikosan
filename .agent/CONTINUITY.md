@@ -34,6 +34,7 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
   - 2枚目以降の画像は遅延読み込み
   - モーダルは全カード全画像をフラット連結して表示
 - 未使用コード整理（2026-08-14）: `(window as any).ImageModal` グローバルAPIを廃止し、`imagemodal:open` CustomEvent 方式に変更。共有契約は新規 `src/components/imageModal.ts`（イベント名定数＋`ModalImage`/`ImageModalOpenDetail`型）に集約。削除: `ImageModal` の未参照 `counter`・`sensitive` フィールド、`MaterialGrid` の `sensitive:false` ハードコード、`index.astro` の `.illust-grid` CSS、`global.css` の `--space-xs`、`SocialLinks` の無意味な三項演算子。
+- 画像ホバー減光の共通化（2026-08-14）: MaterialGrid のみだった hover 減光を ProfileCard バナー（unnamed.png）と FanartCard 画像に拡張。`filter: brightness(0.85)` を廃止し `opacity: var(--image-hover-opacity)`（`:root` 定義、値 `0.85`）に統一。適用対象は操作要素（リンク・ボタン）内の画像のみ・hover のみ（focus-visible は対象外）。FanartCard は sensitive blur との干渉回避のため transition に `filter` と `opacity` の両方を維持。
 
 ## Decisions
 - 単一ページ化: トップに全機能を統合。旧`/otegaki/`は `#otegaki` へリダイレクト（2026-08-14追加、`astro.config.mjs` の `redirects`）。旧`/about/` はリダイレクトなし（404）。[USER][CODE]
@@ -55,6 +56,7 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
 - 画像最適化: Astro 組み込み `<Image />` コンポーネントを使用。静的画像は直接 import、ファンアートは `import.meta.glob` で一括 import。[CODE]
 - CSS インライン化: `astro.config.mjs` で `build.inlineStylesheets: 'always'` に設定。[CODE]
 - モーダル連携（2026-08-14）: `window.ImageModal` グローバルAPIを廃止。呼び出しは `imagemodal:open` CustomEvent 経由（`src/components/imageModal.ts` でイベント名と型を共有）。Astro の `<script>` はバンドル単位でスコープが分離されるため、バンドル間通信はDOMイベントのみ有効。[CODE]
+- 画像ホバー減光（2026-08-14）: `--image-hover-opacity` を `global.css` の `:root` に定義し、MaterialGrid / ProfileCard バナー / FanartCard 画像が参照。opacity 方式は sensitive blur（`filter`）と干渉しないため採用。適用は操作要素内の画像・hover のみ。フォーカスリングは MaterialGrid のカスタム定義（accent枠）を削除し、全要素ブラウザ既定リングに統一。[USER][CODE]
 
 ## Open Issues
 - GitHub Actions の初回実行後、リポジトリの Pages 設定を "GitHub Actions" ソースに切り替える必要がある（ユーザー作業）。
