@@ -22,6 +22,7 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
 - `npm run build` と `npm run check` がエラー0で通ることを確認済み。
 - ファンアートデータを JSON に分離し、型定義のみ `.ts` に保持。
 - `prefers-reduced-motion` 対応を追加。
+- 旧URLリダイレクト（2026-08-14）: `/otegaki` → `#otegaki` へのリダイレクトを `astro.config.mjs` の `redirects` で追加。`base` はリダイレクト先に自動付与されないため、`BASE` 定数（`/ranikosan`）を変数化し `${BASE}/#otegaki` を指定。`dist/otegaki/index.html` にメタリフレッシュのリダイレクトページ（`noindex`）が生成される。`/about` は対象外（404のまま）。
 - パフォーマンス改善完了:
   - 全画像を `public/` → `src/assets/` に移行し Astro の `<Image />` で自動 WebP 最適化
   - top.png: 112kB → 29kB、raniko002.png: 311kB → 71kB
@@ -35,7 +36,7 @@ Astro + TypeScript で個人ホームページを構築し、GitHub Pages（http
 - 未使用コード整理（2026-08-14）: `(window as any).ImageModal` グローバルAPIを廃止し、`imagemodal:open` CustomEvent 方式に変更。共有契約は新規 `src/components/imageModal.ts`（イベント名定数＋`ModalImage`/`ImageModalOpenDetail`型）に集約。削除: `ImageModal` の未参照 `counter`・`sensitive` フィールド、`MaterialGrid` の `sensitive:false` ハードコード、`index.astro` の `.illust-grid` CSS、`global.css` の `--space-xs`、`SocialLinks` の無意味な三項演算子。
 
 ## Decisions
-- 単一ページ化: トップに全機能を統合。旧URL(`/about/`, `/otegaki/`)へのリダイレクトなし（404）。[USER]
+- 単一ページ化: トップに全機能を統合。旧`/otegaki/`は `#otegaki` へリダイレクト（2026-08-14追加、`astro.config.mjs` の `redirects`）。旧`/about/` はリダイレクトなし（404）。[USER][CODE]
 - top.png: `width:120px` + `aspect-ratio:1/1` + `object-fit:cover` で真円（`border-radius:9999px`）。正方クロップは左右を切る中央寄せ。[USER][CODE]
 - 2カラム（2026-08-13）: 左=プロフィールカード（surface背景+border+角丸・中央寄せ）/ 右=コンテンツ。列比 1:3、`#top` アンカーはグリッドのラッパー要素に付与。[USER][CODE]
 - 資料集（2026-08-14）: `MaterialGrid.astro` が単一コンポーネントとして所有。グリッドは `repeat(auto-fit, minmax(180px, 1fr))`（SP 768px以下は2列固定）、タイルは 1/1 正方形 `object-fit: cover`。キャプションは画像下部にオーバーレイ（左下寄せ・下部40%の黒グラデーション rgba(0,0,0,0.75)→透明・白文字・`pointer-events:none`）。ホバー brightness(0.85)、`:focus-visible` accent 枠。モーダルは `ImageModal` の CustomEvent API（`imagemodal:open`）で呼び出し（全枚フラット閲覧、モーダル内キャプションなし）。[USER][CODE]
