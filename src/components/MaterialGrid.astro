@@ -1,0 +1,109 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface MaterialItem {
+  src: ImageMetadata;
+  alt: string;
+}
+
+interface Props {
+  items: MaterialItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="material-grid">
+  {
+    items.map((item) => (
+      <figure class="material-card">
+        <button
+          type="button"
+          class="material-img-btn"
+          aria-label={`${item.alt}を拡大表示`}
+        >
+          <Image src={item.src} alt={item.alt} class="material-img" />
+        </button>
+        <figcaption class="material-caption">{item.alt}</figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<script>
+  const grid = document.querySelector(".material-grid");
+
+  function openModal(imgEl: HTMLImageElement) {
+    const images = Array.from(
+      document.querySelectorAll<HTMLImageElement>(".material-img"),
+    ).map((i) => ({ url: i.src, sensitive: false }));
+
+    const index = images.findIndex((i) => i.url === imgEl.src);
+    if (index === -1) return;
+
+    (window as any).ImageModal.open(images, index);
+  }
+
+  grid?.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest(
+      ".material-img-btn",
+    ) as HTMLElement | null;
+    if (!btn) return;
+    const img = btn.querySelector<HTMLImageElement>(".material-img");
+    if (!img) return;
+    openModal(img);
+  });
+</script>
+
+<style>
+  .material-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .material-card {
+    position: relative;
+    margin: 0;
+    border: 1px solid var(--color-border);
+  }
+
+  .material-caption {
+    position: absolute;
+    border: 1px solid var(--color-border);
+    left: -1px;
+    bottom: -1px;
+    padding: 0 4px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: var(--color-text);
+    background: var(--color-bg);
+    pointer-events: none;
+  }
+
+  .material-img-btn {
+    display: block;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    aspect-ratio: 1 / 1;
+  }
+
+  .material-img-btn .material-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter var(--transition-fast);
+  }
+
+  .material-img-btn:hover .material-img {
+    filter: brightness(0.85);
+  }
+
+  .material-img-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+</style>

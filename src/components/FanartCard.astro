@@ -24,44 +24,97 @@ const multiple = fanart.images.length > 1;
   <div class="card-image-wrapper">
     <div class="carousel" data-carousel={multiple ? "" : undefined}>
       <div class="carousel-track">
-        {fanart.images.map((image, i) => (
-          <div class="carousel-slide">
-            <button type="button" class="card-image-link" data-slide-index={i} aria-label="画像を拡大表示" tabindex={fanart.sensitive ? -1 : undefined}>
-              <Image src={image} alt="" class="card-image" loading={i === 0 ? (lcp ? "eager" : "lazy") : "lazy"} fetchpriority={i === 0 && lcp ? "high" : undefined} />
+        {
+          fanart.images.map((image, i) => (
+            <div class="carousel-slide">
+              <button
+                type="button"
+                class="card-image-link"
+                data-slide-index={i}
+                aria-label="画像を拡大表示"
+                tabindex={fanart.sensitive ? -1 : undefined}
+              >
+                <Image
+                  src={image}
+                  alt=""
+                  class="card-image"
+                  loading={i === 0 ? (lcp ? "eager" : "lazy") : "lazy"}
+                  fetchpriority={i === 0 && lcp ? "high" : undefined}
+                />
+              </button>
+            </div>
+          ))
+        }
+      </div>
+      {
+        multiple && (
+          <>
+            <button
+              type="button"
+              class="carousel-btn carousel-btn--prev"
+              aria-label="前の画像"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
             </button>
-          </div>
-        ))}
-      </div>
-      {multiple && (
-        <>
-          <button type="button" class="carousel-btn carousel-btn--prev" aria-label="前の画像">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <button type="button" class="carousel-btn carousel-btn--next" aria-label="次の画像">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
-          </button>
-          <div class="carousel-dots" role="tablist" aria-label="画像の選択">
-            {fanart.images.map((_, i) => (
-              <button type="button" class="carousel-dot" data-slide={i} role="tab" aria-selected={i === 0 ? "true" : "false"} aria-label={`${i + 1}枚目`} />
-            ))}
-          </div>
-        </>
-      )}
+            <button
+              type="button"
+              class="carousel-btn carousel-btn--next"
+              aria-label="次の画像"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+            <div class="carousel-dots" role="tablist" aria-label="画像の選択">
+              {fanart.images.map((_, i) => (
+                <button
+                  type="button"
+                  class="carousel-dot"
+                  data-slide={i}
+                  role="tab"
+                  aria-selected={i === 0 ? "true" : "false"}
+                  aria-label={`${i + 1}枚目`}
+                />
+              ))}
+            </div>
+          </>
+        )
+      }
     </div>
-    {fanart.tags.length > 0 && (
-      <div class="card-tags">
-        {fanart.tags.map((tag) => (
-          <button type="button" class="card-tag" data-tag={tag}>{tag}</button>
-        ))}
-      </div>
-    )}
+    {
+      fanart.tags.length > 0 && (
+        <div class="card-tags">
+          {fanart.tags.map((tag) => (
+            <button type="button" class="card-tag" data-tag={tag}>
+              {tag}
+            </button>
+          ))}
+        </div>
+      )
+    }
     {
       fanart.sensitive && (
-        <button type="button" class="blur-overlay" aria-label="センシティブな画像を表示">
+        <button
+          type="button"
+          class="blur-overlay"
+          aria-label="センシティブな画像を表示"
+        >
           <span class="blur-overlay-note">センシティブな内容を含みます</span>
           <span class="blur-overlay-text">クリックで表示</span>
         </button>
@@ -90,8 +143,8 @@ const multiple = fanart.images.length > 1;
   class CardCarousel {
     root: HTMLElement;
     track: HTMLElement;
-    prevBtn: HTMLElement | null;
-    nextBtn: HTMLElement | null;
+    prevBtn: HTMLButtonElement | null;
+    nextBtn: HTMLButtonElement | null;
     dots: HTMLElement[];
     slides: HTMLElement[];
     current: number = 0;
@@ -99,12 +152,18 @@ const multiple = fanart.images.length > 1;
     constructor(root: HTMLElement) {
       this.root = root;
       this.track = root.querySelector(".carousel-track")!;
-      this.prevBtn = root.querySelector(".carousel-btn--prev");
-      this.nextBtn = root.querySelector(".carousel-btn--next");
+      this.prevBtn = root.querySelector<HTMLButtonElement>(
+        ".carousel-btn--prev",
+      );
+      this.nextBtn = root.querySelector<HTMLButtonElement>(
+        ".carousel-btn--next",
+      );
       this.dots = Array.from(root.querySelectorAll(".carousel-dot"));
       this.slides = Array.from(root.querySelectorAll(".carousel-slide"));
 
-      this.track.addEventListener("scroll", () => this.onScroll(), { passive: true });
+      this.track.addEventListener("scroll", () => this.onScroll(), {
+        passive: true,
+      });
 
       this.prevBtn?.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -147,7 +206,8 @@ const multiple = fanart.images.length > 1;
 
     update() {
       if (this.prevBtn) this.prevBtn.disabled = this.current === 0;
-      if (this.nextBtn) this.nextBtn.disabled = this.current === this.slides.length - 1;
+      if (this.nextBtn)
+        this.nextBtn.disabled = this.current === this.slides.length - 1;
       this.dots.forEach((dot, i) => {
         const active = i === this.current;
         dot.classList.toggle("active", active);
@@ -158,10 +218,14 @@ const multiple = fanart.images.length > 1;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll<HTMLElement>(".carousel[data-carousel]").forEach((el) => new CardCarousel(el));
+      document
+        .querySelectorAll<HTMLElement>(".carousel[data-carousel]")
+        .forEach((el) => new CardCarousel(el));
     });
   } else {
-    document.querySelectorAll<HTMLElement>(".carousel[data-carousel]").forEach((el) => new CardCarousel(el));
+    document
+      .querySelectorAll<HTMLElement>(".carousel[data-carousel]")
+      .forEach((el) => new CardCarousel(el));
   }
 </script>
 
@@ -169,7 +233,6 @@ const multiple = fanart.images.length > 1;
   .card {
     display: flex;
     flex-direction: column;
-    border-radius: var(--radius-image);
     overflow: hidden;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -272,7 +335,9 @@ const multiple = fanart.images.length > 1;
     background: rgba(0, 0, 0, 0.4);
     cursor: pointer;
     padding: 0;
-    transition: background var(--transition-fast), border-color var(--transition-fast);
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast);
   }
 
   .carousel-dot.active {

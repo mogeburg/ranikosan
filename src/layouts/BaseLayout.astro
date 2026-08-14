@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import Navbar from '@components/Navbar.astro';
 
 interface Props {
   title: string;
@@ -24,7 +23,6 @@ const base = import.meta.env.BASE_URL;
     </script>
   </head>
   <body>
-    <Navbar />
     <main class="container">
       <slot />
     </main>
@@ -37,12 +35,12 @@ const base = import.meta.env.BASE_URL;
     min-width: 320px;
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: calc(var(--space-lg) + 3rem) var(--content-padding) var(--space-lg);
+    padding: var(--space-lg) var(--content-padding) var(--space-lg);
   }
 
   @media (max-width: 768px) {
     .container {
-      padding: calc(var(--space-md) + 3rem) var(--content-padding) var(--space-md);
+      padding: var(--space-md) var(--content-padding) var(--space-md);
     }
   }
 </style>

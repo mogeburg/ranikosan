@@ -1,0 +1,95 @@
+---
+import iconImg from "@assets/images/icon.png";
+import unnamedImg from "@assets/images/unnamed.png";
+import { Image } from "astro:assets";
+import SocialLinks from "./SocialLinks.astro";
+---
+
+<div class="profile-card">
+  <Image
+    src={iconImg}
+    alt="らにこさんのアイコン"
+    width={150}
+    height={150}
+    class="profile-avatar"
+    fetchpriority="high"
+    loading="eager"
+    decoding="sync"
+  />
+  <div class="profile-body">
+    <p class="profile-text">
+      らにこさんだよ。らにこでもらにこちゃでもﾗﾆｺﾀｿでも好きに呼んでね。主にTwitchで配信をしているよ、よろしくね。
+    </p>
+    <SocialLinks variant="round" />
+    <a
+      href="https://sites.google.com/view/happy-busy/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Image src={unnamedImg} alt="" class="unnamed-image" />
+    </a>
+  </div>
+</div>
+
+<style>
+  .profile-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: var(--radius-pill);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    flex-shrink: 0;
+  }
+
+  .profile-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+
+  .profile-text {
+    margin: 0;
+    font-size: 0.9rem;
+    text-align: left;
+  }
+
+  .unnamed-image {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .profile-body :global(.variant-round) {
+    justify-content: flex-start;
+  }
+
+  @media (max-width: 768px) {
+    .profile-card {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .profile-text {
+      text-align: center;
+    }
+
+    .profile-body {
+      align-items: center;
+    }
+
+    .profile-body :global(.variant-round) {
+      justify-content: center;
+    }
+  }
+</style>
