@@ -235,7 +235,7 @@ const multiple = fanart.images.length > 1;
     flex-direction: column;
     overflow: hidden;
     background: var(--color-surface);
-    border: 4px solid var(--color-border);
+    border: var(--border-thick) solid var(--color-border);
     box-shadow: var(--shadow-hard);
   }
 
@@ -244,7 +244,7 @@ const multiple = fanart.images.length > 1;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     background: var(--color-border);
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: var(--border-md) solid var(--color-border);
   }
 
   /* --- Carousel --- */
@@ -282,7 +282,7 @@ const multiple = fanart.images.length > 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.45);
+    border: var(--border-md) solid rgba(255, 255, 255, 0.45);
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.55);
     color: #fff;
@@ -333,7 +333,7 @@ const multiple = fanart.images.length > 1;
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: var(--border-thin) solid rgba(255, 255, 255, 0.6);
     background: rgba(0, 0, 0, 0.4);
     cursor: pointer;
     padding: 0;
@@ -370,7 +370,7 @@ const multiple = fanart.images.length > 1;
     border-radius: var(--radius-pill);
     background: rgba(0, 0, 0, 0.55);
     color: #fff;
-    font-size: 0.6875rem;
+    font-size: var(--text-xs);
     font-family: inherit;
     cursor: pointer;
     transition: background var(--transition-fast);
@@ -487,15 +487,14 @@ const multiple = fanart.images.length > 1;
 
   .blur-overlay-note {
     color: rgba(255, 255, 255, 0.75);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     text-align: center;
   }
 
   .blur-overlay-text {
     color: #fff;
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
     padding: 0.375rem 0.75rem;
-    border-radius: 4px;
     background: rgba(0, 0, 0, 0.55);
   }
 
@@ -505,23 +504,23 @@ const multiple = fanart.images.length > 1;
     align-items: center;
     gap: 0.375rem;
     padding: 0.5rem 0.75rem;
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
   }
 
   .card-author {
-    font-weight: 600;
+    font-weight: var(--font-weight-bold);
     flex-shrink: 0;
   }
 
   .card-date {
     color: var(--color-text-muted);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     flex-shrink: 0;
   }
 
   .card-link {
-    font-weight: bold;
-    font-size: 0.75rem;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--text-xs);
     margin-left: auto;
     flex-shrink: 0;
   }

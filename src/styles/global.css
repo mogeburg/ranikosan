@@ -1,5 +1,12 @@
 :root {
   --font-sans: "Inter", "LINE Seed JP", system-ui, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.5rem;
 
   --color-bg: #fafafa;
   --color-surface: #ffffff;
@@ -20,6 +27,10 @@
 
   --color-interactive-border: var(--color-border);
   --color-interactive-border-hover: var(--color-accent);
+
+  --border-thick: 4px;
+  --border-md: 2px;
+  --border-thin: 1px;
 
   --content-max-width: 960px;
   --content-padding: var(--space-sm);
@@ -59,6 +70,7 @@ body {
   margin: 0;
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-size: var(--text-base);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
