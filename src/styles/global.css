@@ -8,13 +8,13 @@
   --color-border: #000000;
   --color-accent: #5cb800;
   --color-accent-text: #111111;
+  --shadow-hard: 6px 6px var(--color-border);
 
   --space-sm: 1rem;
   --space-md: 1.5rem;
   --space-lg: 2.5rem;
 
   --radius-pill: 9999px;
-  --shadow-hard: 6px 6px var(--color-border);
   --transition-fast: 0.15s ease;
   --image-hover-opacity: 0.85;
 
@@ -33,13 +33,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #090909;
+    --color-bg: #212121;
     --color-surface: #161616;
     --color-text: #f4f4f4;
     --color-text-muted: #8f8f8f;
-    --color-border: #2a2a2a;
+    --color-border: #3f3f3f;
     --color-accent: #9eff3a;
     --color-accent-text: #111111;
+    --shadow-hard: 6px 6px #000000;
   }
 }
 
