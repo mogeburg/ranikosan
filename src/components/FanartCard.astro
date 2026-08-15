@@ -123,7 +123,6 @@ const multiple = fanart.images.length > 1;
   </div>
   <div class="card-meta">
     <span class="card-author">{fanart.author || "もげ"}</span>
-    <time class="card-date">{fanart.postedAt}</time>
     {
       linkLabel && (
         <a
@@ -503,19 +502,17 @@ const multiple = fanart.images.length > 1;
     display: flex;
     align-items: center;
     gap: 0.375rem;
+    min-width: 0;
     padding: 0.5rem 0.75rem;
     font-size: var(--text-sm);
   }
 
   .card-author {
     font-weight: var(--font-weight-bold);
-    flex-shrink: 0;
-  }
-
-  .card-date {
-    color: var(--color-text-muted);
-    font-size: var(--text-xs);
-    flex-shrink: 0;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .card-link {
