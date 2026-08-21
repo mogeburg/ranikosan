@@ -50,7 +50,7 @@ const links = [
             height={18}
             viewBox={viewBox}
             fill="currentColor"
-            fill-rule={fillRule ?? "nonzero"}
+            fill-rule={(fillRule ?? "nonzero") as "evenodd" | "nonzero"}
             aria-hidden="true"
           >
             <path d={path} />
