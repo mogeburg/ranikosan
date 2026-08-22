@@ -13,7 +13,7 @@ export type Fanart = {
 import data from "./fanarts.json";
 
 const fanartGlob = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/images/fanart/*.{webp,png,jpg,jpeg}",
+  "../assets/images/fanart/*.{webp,gif,png,jpg,jpeg}",
   { eager: true },
 );
 
